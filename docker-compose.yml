@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:    
+    web:
+        build: ./web
+        container_name: "web"
+        ports:
+            - ${WEB_PORT}:5000
+        volumes:
+            - ./web:/web
+        env_file: .env
+        network_mode: "host"

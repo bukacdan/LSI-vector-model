@@ -1,0 +1,4 @@
+docker
+Flask
+pysqlite3
+numpy
