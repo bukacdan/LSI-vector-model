@@ -4,7 +4,7 @@ Semestral project for the BI-VWM (Searching the web and multimedial databases) s
 Daniel Bukač ([bukacdan@fit.cvut.cz](mailto:bukacdan@fit.cvut.cz)) and Matěj Latka ([latkamat@fit.cvut.cz](mailto:latkamat@fit.cvut.cz)).
 
 # Installation
-1. [Install Docker](https://docs.docker.com/get-docker/)
+1. [Install Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
 2. Clone the repository with SSH
 ```shell
 git clone git@gitlab.fit.cvut.cz:latkamat/lsi-vector-model.git  
