@@ -1,2 +1,4 @@
 __pycache__
 .idea/*
+logic/sklearn_data/
+logic/.ipynb_checkpoints/
