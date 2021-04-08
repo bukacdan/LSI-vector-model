@@ -1,4 +1,24 @@
 {% extends "base.html" %}
 {%  block content %}
-    <h1>LSI vector model</h1>
+<section class="page-content vertical-centered">
+    <div class="headline-wrapper">
+        <h1 class="page-headline">
+            LSI vector model
+        </h1>
+        <h3 class="page-subtitle">
+            Give me seached query.
+        </h3>
+    </div>
+    <form id="query-form" action='' method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        {{ form.query(class_="query-input", size=256) }}
+        <div class="util-wrapper">
+            <span class="checkbox-wrapper">
+                {{ form.sequential_search.label }}
+                {{ form.sequential_search(class_='checkbox')}}
+            </span>
+            {{ form.submit(class_='submit-btn')}}
+        </div>
+    </form>
+    </section>
 {%  endblock %}

@@ -6,6 +6,7 @@ from flask import Flask
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__, template_folder=os.environ.get('TEMPLATE_FOLDER', 'templates'))
+# je 
 config_path = os.path.join('config', os.environ.get('WEB_CONFIG_FILE', 'config.py'))
 app.config.from_pyfile(config_path)
 logger.info(f'loaded configuration from {config_path}')

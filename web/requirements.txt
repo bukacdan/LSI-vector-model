@@ -1,4 +1,5 @@
 docker
 Flask
+Flask-WTF
 pysqlite3
 numpy
