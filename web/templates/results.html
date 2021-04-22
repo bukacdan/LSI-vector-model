@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+    <p>Number of results limited to {{ res | length }}.</p>
+    <p>Results found in {{ "%.2f" | format(time) }} s.</p>
+
+      {% for r in res %}
+        <p>Query: {{ r["query"] }}</p>
+        <p>Angle: {{ r["angle"] }}</p>
+        <p>Document index: {{ r["document_index"] }}</p>
+        <p>{{ r["document"][:100] }}...</p>
+        <a href="{{ url_for('detail', idx=loop.index) }}"><button class="submit-btn">Go to detail &rarr;</button></a>
+        <hr class="separator">
+      {% endfor %}
+    
+    
+{% endblock %}

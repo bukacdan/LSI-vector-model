@@ -6,25 +6,28 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" />  <!-- normalize -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600&family=Source+Code+Pro&display=swap" rel="stylesheet"> 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel='stylesheet' href={{ url_for('static', filename='css/stylesheet.css') }} />
         <title>LSI vector model</title>
     </head>
 
     <body>
-        <nav class="menu">
-            <ul class="nav-list">
-                <li class="nav-item">
-                    <a class="nav-link" href={{url_for('index')}}>Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href={{url_for('about')}}>About</a>
-                </li>
-            </ul>
-        </nav>
-        {% block content %}
-        {% endblock %}
+        <div class="d-flex flex-column min-vh-100">
+            <nav class="menu">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a class="nav-link" href={{url_for('index')}}>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href={{url_for('about')}}>About</a>
+                    </li>
+                </ul>
+            </nav>
+            {% block content %}
+            {% endblock %}
+        </div>
         <footer>
-            <p>This is semestral work for subject BI-VWM in semester B202 at FIT CTU</p>
+            <p class="description">This is semestral work for subject BI-VWM in semester B202 at FIT CTU</p>
             <ul class="author-list">
                 <li class="author-item">
                     <a href="mailto:bukacdan@fit.cvut.cz">Daniel Bukac (bukacdan)</a>
@@ -35,4 +38,7 @@
             </ul>
         </footer>
     </body>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </html>
