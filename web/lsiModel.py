@@ -101,3 +101,26 @@ class LSI:
         end = time.time()
         self.last_query_results = values_indexes[:limit]
         self.last_query_execution_time = end - start
+
+
+    def process_query_seq(self, query, limit=-1):
+        start = time.time()
+        self.terms = self.tfidf.get_feature_names()
+        logging.info(f'LSI: Processing query \"{query}\".')
+        query = query.split()
+        res = []
+        for word in query:
+            indice = self.terms.index(word)
+            col = self.tdm[:, indice]
+            docs = [
+                {"query": query, "document_index": index, "document": self.df.loc[index, "documents"]}
+                for index, tfidf in enumerate(col)
+                if tfidf > 0]
+            res = [*res, *docs]
+        
+        if limit == -1:
+            limit = 100
+
+        end = time.time()
+        self.last_query_results = res[:limit]
+        self.last_query_execution_time = end - start

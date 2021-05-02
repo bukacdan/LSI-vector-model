@@ -1,16 +1,42 @@
 {% extends "base.html" %}
-{% block content %}
-    <p>Number of results limited to {{ res | length }}.</p>
-    <p>Results found in {{ "%.2f" | format(time) }} s.</p>
 
+{% block head %}
+<link rel='stylesheet' href={{ url_for('static', filename='css/results.css') }} />
+{% endblock%}
+
+{% block content %}
+<section id='results'>
+  <section id='tech-analysis'>
+    <p>
+      Number of results limited to <span class="technical">{{ res | length }}</span>.
+    </p>
+    <p>
+      {% if seq %}
+      Searching sequentially.
+      {% endif %}
+      Results found in <span class="technical"> {{ "%.2f" | format(time) }} s</span>.
+    </p>
+  </section>
+  <section>
+    <ol class="result-list">
       {% for r in res %}
-        <p>Query: {{ r["query"] }}</p>
-        <p>Angle: {{ r["angle"] }}</p>
-        <p>Document index: {{ r["document_index"] }}</p>
-        <p>{{ r["document"][:100] }}...</p>
-        <a href="{{ url_for('detail', idx=loop.index) }}"><button class="submit-btn">Go to detail &rarr;</button></a>
-        <hr class="separator">
+        <li class="result-item">
+          <article class="result-article">
+            <header>
+              <p class="technical">Query: {{ r["query"] }}</p>
+      
+              {% if not seq %}
+              <p class="technical">Angle: {{ r["angle"] }}</p>
+              {% endif %}
+      
+              <p class="technical">Document index: {{ r["document_index"] }}</p>
+              <p class="text">{{ r["document"][:100] }}...</p>
+            </header>
+            <a href="{{ url_for('detail', idx=loop.index) }}"><button class="submit-btn">Go to detail &rarr;</button></a>
+          </article>
+        </li>
       {% endfor %}
-    
-    
+    </ol>
+  </section>
+</section>
 {% endblock %}

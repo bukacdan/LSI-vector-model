@@ -1,6 +1,16 @@
 {% extends "base.html" %}
+
+{% block head %}
+<link rel='stylesheet' href={{ url_for('static', filename='css/detail.css') }} />
+{% endblock %}
+
 {% block content %}
-  <section class="vertical-centered">
-    {{ text["document"] }}
+  <section id="detail" class="full-page">
+    <h1 class="technical detail-headline">
+      Result n.{{ index }}
+    </h1>
+    <article class="detail-article">
+      {{ text["document"] }}
+    </article>
   </section>
 {% endblock %}

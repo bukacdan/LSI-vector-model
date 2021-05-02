@@ -1,0 +1,42 @@
+#results #tech-analysis {
+    width: 100%;
+    padding: .5rem;
+    text-align: center;
+    background-color: yellow;
+    border-bottom: solid 1px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+#results #tech-analysis p {
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+#results .result-list {
+    list-style: none;
+    counter-reset: fancy-counter;
+}
+
+#results .result-item {
+    counter-increment: fancy-counter;
+    display: flex;
+    align-items: center;
+    width: 99%;
+    padding: 1rem;
+    border-bottom: solid 1px black;
+}
+
+#results .result-item:last-of-type {
+    border-bottom: none;
+}
+
+#results .result-item::before {
+    content: counter(fancy-counter);
+    font-size: 3.2rem;
+    margin-right: 1.5rem;
+    font-family: 'Source Code Pro', monospace;
+}
