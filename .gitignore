@@ -3,3 +3,4 @@ __pycache__
 logic/sklearn_data/
 web/sklearn_data/
 logic/.ipynb_checkpoints/
+logic/nltk_data/
