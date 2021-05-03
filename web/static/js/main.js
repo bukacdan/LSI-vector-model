@@ -1,4 +1,7 @@
 function loading_search() {
   $("#loading-search").show();
-  $("#content").hide();      
+}
+
+function loading_lsi() {
+  $("#loading-lsi").show();
 }

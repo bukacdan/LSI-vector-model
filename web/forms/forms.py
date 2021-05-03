@@ -9,4 +9,5 @@ class SearchQueryForm(FlaskForm):
         validators=[DataRequired()]
     )
     sequential_search = BooleanField(label='search sequentially')
-    submit = SubmitField('search')
+    submit_search = SubmitField('search')
+    submit_lsi = SubmitField('initialize LSI')

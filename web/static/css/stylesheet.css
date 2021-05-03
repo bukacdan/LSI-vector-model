@@ -123,12 +123,12 @@ section.full-page {
     height: 5px;
 }
 
-#query-form {
+.query-form {
     width: 80%;
     margin: 0 auto;
 }
 
-#query-form .query-input {
+.query-form .query-input {
     background-color: transparent;
     border: none;
     border-bottom: 1px solid black;
@@ -141,11 +141,11 @@ section.full-page {
 }
 
 
-#query-form .util-wrapper {
+.query-form .util-wrapper {
     text-align: right;
 }
 
-#query-form .util-wrapper .checkbox-wrapper {
+.query-form .util-wrapper .checkbox-wrapper {
     margin-right: 1.8rem;
 }
 
@@ -162,6 +162,14 @@ section.full-page {
 .submit-btn:hover {
     text-decoration: underline;
     transition: all .6s ease-out;
+}
+
+.initialized-false {
+    color: red;
+}
+
+.initialized-true {
+    color: green;
 }
 
 footer {
@@ -189,11 +197,21 @@ footer .author-list .author-item {
     margin: 0 .6rem;
 }
 
-
-#loading-search {
+.loading-gif {
+    display: block;
     width: 1rem;
     height: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#loading-search {
     display: none;
-    /* background: url(/static/img/loading-search.gif) no-repeat; */
+    cursor: wait;
+}
+
+#loading-lsi {
+    display: flex;
+    display: none;
     cursor: wait;
 }

@@ -6,21 +6,23 @@ from web.lsiModel import LSI
 
 lsi = LSI()
 
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     global lsi
-    if not lsi.prepared:
-        app.logger.info("Preparing LSI.")
-        lsi.prepare()
-        app.logger.info("LSI prepared!")
     form = SearchQueryForm(formdata=request.form)
 
     if request.method == "POST":
-        query = request.form['query']
-        sequential = 'sequential_search' in request.form
-        lsi.process_query_seq(query) if sequential else lsi.process_query(query)
-        return redirect(url_for("results", seq=sequential))
-    return render_template("homepage.html", form=form)
+        if lsi.prepared:
+            query = request.form['query']
+            sequential = 'sequential_search' in request.form
+            lsi.process_query_seq(query) if sequential else lsi.process_query(query)
+            return redirect(url_for("results", seq=sequential))
+        else:
+            app.logger.info("Preparing LSI.")
+            lsi.prepare()
+            app.logger.info("LSI prepared!")
+    return render_template("homepage.html", form=form, prepared=lsi.prepared)
 
 
 @app.route("/results")
