@@ -17,9 +17,10 @@
                 {{ form.sequential_search.label }}
                 {{ form.sequential_search(class_='checkbox')}}
             </span>
-            {{ form.submit(class_='submit-btn')}}
+            {{ form.submit(class_='submit-btn', onclick = 'loading_search();')}}
         </div>
     </form>
+    <img src="{{ url_for('static', filename='img/loading-search.gif') }}" id="loading-search"></div>
     </section>
     
 {%  endblock %}

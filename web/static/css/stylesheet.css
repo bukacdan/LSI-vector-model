@@ -188,3 +188,12 @@ footer .author-list {
 footer .author-list .author-item {
     margin: 0 .6rem;
 }
+
+
+#loading-search {
+    width: 1rem;
+    height: 1rem;
+    display: none;
+    /* background: url(/static/img/loading-search.gif) no-repeat; */
+    cursor: wait;
+}
