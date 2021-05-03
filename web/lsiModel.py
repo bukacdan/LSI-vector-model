@@ -5,7 +5,9 @@ import logging
 import numpy as np
 import pandas as pd
 
+import nltk
 from kneed import KneeLocator
+from nltk.stem import WordNetLemmatizer
 from scipy.sparse.linalg import svds
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -18,6 +20,12 @@ class LSI:
         self.k = 200
         self.last_query_results = []
         self.last_query_execution_time = 0
+        self.NLTK_DATA_PATH = "./nltk_data"
+        self.lemmatizer = WordNetLemmatizer()
+
+        #logging.info("LSI: Downloading nltk data.")
+        #nltk.download(['porter_test', 'rslp'], download_dir=os.path.abspath(self.NLTK_DATA_PATH))
+        nltk.data.path.append(os.path.abspath(self.NLTK_DATA_PATH))
 
 
     def fetch_dataset(self, data_dir: str = "sklearn-data", remove: tuple = ("headers", "footers", "quotes")):
@@ -34,6 +42,7 @@ class LSI:
                 .pipe(lambda x: x.str.lower())  # make all letters lowercase 
                 .pipe(lambda x: x.str.replace("\S*@\S*\s?", "", regex=True)) # remove email addresses
                 .pipe(lambda x: x.str.replace("[^a-zA-Z#]", " ", regex=True)) # remove non-alphabetical characters
+                .pipe(lambda x: pd.Series([' '.join([self.lemmatizer.lemmatize(w) for w in line]) for line in x.str.split()])) # lemmatization
                 .pipe(lambda x: pd.Series([' '.join([w for w in line if len(w) >= min_word_length]) for line in x.str.split()])) # get rid of short words
             )
 
@@ -81,15 +90,18 @@ class LSI:
         start = time.time()
         logging.info(f"LSI: Processing query \"{query}\".")
         query = query.split()
-        query_tdm = self.tfidf.transform(query)
-        query_concepts = query_tdm @ np.transpose(self.vt)  # query projection to the space of concepts --> concept-by-query
-        sim = cosine_similarity(self.u, query_concepts)  # cosine similarity between concept-by-documents and concept-by-query
+        query_lemmatized = query
+        for i, q in enumerate(query_lemmatized):
+            query_lemmatized[i] = self.lemmatizer.lemmatize(q)
+        query_lemmatized_tdm = self.tfidf.transform(query_lemmatized)
+        query_lemmatized_concepts = query_lemmatized_tdm @ np.transpose(self.vt)  # query projection to the space of concepts --> concept-by-query
+        sim = cosine_similarity(self.u, query_lemmatized_concepts)  # cosine similarity between concept-by-documents and concept-by-query
         acos = np.arccos(sim)
 
         values_indexes = []
         for i in range(acos.shape[1]):
             for j, val in enumerate(acos[:, i]):
-                values_indexes.append({"query": query[i], "angle": val, "document_index": j})
+                values_indexes.append({"query": query[i], "query_lemmatized": query_lemmatized[i], "angle": val, "document_index": j})
         values_indexes.sort(key=lambda x: x["angle"])
 
         if limit == -1:
@@ -108,12 +120,15 @@ class LSI:
         self.terms = self.tfidf.get_feature_names()
         logging.info(f'LSI: Processing query \"{query}\".')
         query = query.split()
+        query_lemmatized = query
+        for i, q in enumerate(query_lemmatized):
+            query_lemmatized[i] = self.lemmatizer.lemmatize(q)
         res = []
-        for word in query:
+        for i, word in enumerate(query_lemmatized):
             indice = self.terms.index(word)
             col = self.tdm[:, indice]
             docs = [
-                {"query": query, "document_index": index, "document": self.df.loc[index, "documents"]}
+                {"query": query[i], "query_lemmatized": query_lemmatized[i], "document_index": index, "document": self.df.loc[index, "documents"]}
                 for index, tfidf in enumerate(col)
                 if tfidf > 0]
             res = [*res, *docs]

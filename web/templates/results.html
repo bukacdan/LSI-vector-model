@@ -24,6 +24,7 @@
           <article class="result-article">
             <header>
               <p class="technical">Query: {{ r["query"] }}</p>
+              <p class="technical">Lemmatized query: {{ r["query_lemmatized"] }}</p>
       
               {% if not seq %}
               <p class="technical">Angle: {{ r["angle"] }}</p>

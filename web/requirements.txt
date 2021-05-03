@@ -8,3 +8,4 @@ pandas
 kneed
 scipy
 scikit-learn
+nltk==3.5
