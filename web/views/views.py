@@ -33,7 +33,12 @@ def results():
 
 @app.route("/results/<idx>")
 def detail(idx = 0):
-    return render_template("detail.html", index=idx, text=lsi.last_query_results[max(0, int(idx) - 1)])
+    global lsi
+
+    if not lsi.prepared:
+        return redirect(url_for("index"))
+    lsi.process_document(int(idx))
+    return render_template("detail.html", index=idx, text=lsi.last_query_results[max(0, int(idx) - 1)], similar=lsi.last_document_results)
 
 
 @app.route("/about")

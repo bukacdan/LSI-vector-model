@@ -19,6 +19,7 @@ class LSI:
         self.prepared = False
         self.k = 200
         self.last_query_results = []
+        self.last_document_results = []
         self.last_query_execution_time = 0
         self.NLTK_DATA_PATH = "./nltk_data"
         self.lemmatizer = WordNetLemmatizer()
@@ -86,7 +87,7 @@ class LSI:
         self.prepared = True
 
 
-    def process_query(self, query: str, limit: int = -1) -> list:
+    def process_query(self, query: str, limit: int = 100) -> None:
         start = time.time()
         logging.info(f"LSI: Processing query \"{query}\".")
         query = query.split()
@@ -109,10 +110,6 @@ class LSI:
                     "document_category": self.dataset.target_names[self.dataset.target[j]]
                 })
         values_indexes.sort(key=lambda x: x["angle"])
-
-        if limit == -1:
-          #limit = acos.shape[0]
-          limit = 100
           
         for v in values_indexes[:limit]:
             v["document"] = self.df.iloc[v["document_index"]]["documents"]
@@ -121,7 +118,7 @@ class LSI:
         self.last_query_execution_time = end - start
 
 
-    def process_query_seq(self, query, limit=-1):
+    def process_query_seq(self, query, limit=-1) -> None:
         start = time.time()
         self.terms = self.tfidf.get_feature_names()
         logging.info(f'LSI: Processing query \"{query}\".')
@@ -157,3 +154,28 @@ class LSI:
         end = time.time()
         self.last_query_results = res[:limit]
         self.last_query_execution_time = end - start
+
+
+    def process_document(self, document_idx, limit: int = 20) -> None:
+        logging.info(f"LSI: Processing document at index {document_idx}.")
+        document_tdm = self.tdm[document_idx]
+        document_concepts = document_tdm @ np.transpose(self.vt)
+        sim = cosine_similarity(self.u, document_concepts)
+        acos = np.arccos(sim)
+
+        values_indexes = []
+        for i in range(acos.shape[1]):
+            for j, val in enumerate(acos[:, i]):
+                values_indexes.append({
+                    "angle": val,
+                    "document_index": j,
+                    "document_category": self.dataset.target_names[self.dataset.target[j]]
+                })
+        values_indexes.sort(key=lambda x: x["angle"])
+
+        for v in values_indexes[:limit]:
+            v["document"] = self.df.iloc[v["document_index"]]["documents"]
+        self.last_document_results = values_indexes[:limit]    
+
+
+

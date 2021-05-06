@@ -26,15 +26,13 @@
         <li class="result-item">
           <article class="result-article">
             <header>
-              <p class="technical">Query: {{ r["query"] }}</p>
-              <p class="technical">Lemmatized query: {{ r["query_lemmatized"] }}</p>
-      
-              {% if not seq %}
-              <p class="technical">Angle: {{ r["angle"] }}</p>
-              {% endif %}
-      
-              <p class="technical">Document index: {{ r["document_index"] }}</p>
-              <p class="technical">Document category: {{ r["document_category"] }}</p>
+              <p class="technical">
+                Query: {{ r["query"] }} |
+                Lemmatized query: {{ r["query_lemmatized"] }} |
+                {% if not seq %}Angle: {{ r["angle"] }} |{% endif %}
+                Document index: {{ r["document_index"] }} |
+                Document category: {{ r["document_category"] }}
+            </p>
               <p class="text">{{ r["document"][:100] }}...</p>
             </header>
             <a href="{{ url_for('detail', idx=loop.index) }}"><button class="submit-btn">Go to detail &rarr;</button></a>
