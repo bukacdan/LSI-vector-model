@@ -18,6 +18,9 @@
     </p>
   </section>
   <section>
+    {% if res | length == 0 %}
+    <p>sorry we didnt find anything mathing your query</p>
+    {% else %}
     <ol class="result-list">
       {% for r in res %}
         <li class="result-item">
@@ -38,6 +41,7 @@
         </li>
       {% endfor %}
     </ol>
+    {% endif %}
   </section>
 </section>
 {% endblock %}

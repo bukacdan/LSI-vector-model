@@ -125,7 +125,13 @@ class LSI:
             query_lemmatized[i] = self.lemmatizer.lemmatize(q)
         res = []
         for i, word in enumerate(query_lemmatized):
-            indice = self.terms.index(word)
+            try:
+                indice = self.terms.index(word)
+            except ValueError:
+                self.last_query_results=res
+                end = time.time()
+                self.last_query_execution_time = end - start
+                return
             col = self.tdm[:, indice]
             docs = [
                 {"query": query[i], "query_lemmatized": query_lemmatized[i], "document_index": index, "document": self.df.loc[index, "documents"]}
