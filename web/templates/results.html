@@ -34,6 +34,7 @@
               {% endif %}
       
               <p class="technical">Document index: {{ r["document_index"] }}</p>
+              <p class="technical">Document category: {{ r["document_category"] }}</p>
               <p class="text">{{ r["document"][:100] }}...</p>
             </header>
             <a href="{{ url_for('detail', idx=loop.index) }}"><button class="submit-btn">Go to detail &rarr;</button></a>

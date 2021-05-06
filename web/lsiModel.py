@@ -1,11 +1,11 @@
 import os
 import time
+import nltk
 import logging
 
 import numpy as np
 import pandas as pd
 
-import nltk
 from kneed import KneeLocator
 from nltk.stem import WordNetLemmatizer
 from scipy.sparse.linalg import svds
@@ -101,7 +101,13 @@ class LSI:
         values_indexes = []
         for i in range(acos.shape[1]):
             for j, val in enumerate(acos[:, i]):
-                values_indexes.append({"query": query[i], "query_lemmatized": query_lemmatized[i], "angle": val, "document_index": j})
+                values_indexes.append({
+                    "query": query[i],
+                    "query_lemmatized": query_lemmatized[i],
+                    "angle": val,
+                    "document_index": j,
+                    "document_category": self.dataset.target_names[self.dataset.target[j]]
+                })
         values_indexes.sort(key=lambda x: x["angle"])
 
         if limit == -1:
@@ -134,7 +140,13 @@ class LSI:
                 return
             col = self.tdm[:, indice]
             docs = [
-                {"query": query[i], "query_lemmatized": query_lemmatized[i], "document_index": index, "document": self.df.loc[index, "documents"]}
+                {
+                    "query": query[i],
+                    "query_lemmatized": query_lemmatized[i],
+                    "document_index": index,
+                    "document": self.df.loc[index, "documents"],
+                    "document_category": self.dataset.target_names[self.dataset.target[index]]
+                }
                 for index, tfidf in enumerate(col)
                 if tfidf > 0]
             res = [*res, *docs]
