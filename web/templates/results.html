@@ -35,7 +35,6 @@
             </p>
               <p class="text">{{ r["document"][:100] }}...</p>
             </header>
-            {{ r['document_index'] }}
             <a href="{{ url_for('detail', idx_loop=loop.index, idx_document_url=r['document_index'], idx_document=r['document_index'], similar=False) }}">
               <button class="submit-btn">Go to detail &rarr;</button>
             </a>
