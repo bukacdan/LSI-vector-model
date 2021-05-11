@@ -1,4 +1,11 @@
+python-dotenv
 docker
 Flask
+Flask-WTF
 pysqlite3
 numpy
+pandas
+kneed
+scipy
+scikit-learn
+nltk==3.5

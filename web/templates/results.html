@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel='stylesheet' href={{ url_for('static', filename='css/results.css') }} />
+{% endblock%}
+
+{% block content %}
+<section id='results'>
+  <section id='tech-analysis'>
+    <p>
+      Number of results limited to <span class="technical">{{ res | length }}</span>.
+    </p>
+    <p>
+      {% if seq %}
+      Searching sequentially.
+      {% endif %}
+      Results found in <span class="technical"> {{ "%.2f" | format(time) }} s</span>.
+    </p>
+  </section>
+  <section>
+    {% if res | length == 0 %}
+    <p>sorry we didnt find anything mathing your query</p>
+    {% else %}
+    <ol class="result-list">
+      {% for r in res %}
+        <li class="result-item">
+          <article class="result-article">
+            <header>
+              <p class="technical">
+                Query: {{ r["query"] }} |
+                Lemmatized query: {{ r["query_lemmatized"] }} |
+                {% if not seq %}Angle: {{ r["angle"] }} |{% endif %}
+                Document index: {{ r["document_index"] }} |
+                Document category: {{ r["document_category"] }}
+            </p>
+              <p class="text">{{ r["document"][:100] }}...</p>
+            </header>
+            {{ r['document_index'] }}
+            <a href="{{ url_for('detail', idx_loop=loop.index, idx_document_url=r['document_index'], idx_document=r['document_index'], similar=False) }}">
+              <button class="submit-btn">Go to detail &rarr;</button>
+            </a>
+          </article>
+        </li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

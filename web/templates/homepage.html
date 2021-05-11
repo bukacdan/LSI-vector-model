@@ -1,4 +1,47 @@
 {% extends "base.html" %}
-{%  block content %}
-    <h1>LSI vector model</h1>
+{% block content %}
+<section class="page-content vertical-centered">
+    <div class="headline-wrapper">
+        <h1 class="page-headline">
+            LSI vector model
+        </h1>
+        {% if prepared %}
+        <h3 class="page-subtitle">
+            Give me seached query.
+        </h3>
+        {% endif %}
+    </div>
+    <form class="query-form" action="" method="POST" novalidate>
+        {{ form.hidden_tag() }}
+        {% if prepared %}
+            {{ form.query(class_="query-input", size=256) }}
+        {% endif %}
+        <div class="util-wrapper">
+            <span class="checkbox-wrapper">
+                LSI status
+                {% if prepared %}
+                    <i class="bi bi-check-circle initialized-true"></i>
+                {% else %}
+                    <i class="bi bi-x-circle initialized-false"></i>  
+                {% endif %}
+            </span>
+            
+            {% if prepared %}
+                <span class="checkbox-wrapper">
+                    {{ form.sequential_search.label }}
+                    {{ form.sequential_search(class_='checkbox')}}
+                </span>
+                {{ form.submit_search(class_='submit-btn', onclick = 'loading_search();')}}
+            {% else %}
+                {{ form.submit_lsi(class_='submit-btn', onclick = 'loading_lsi();')}}
+            {% endif %}
+        </div>
+    </form>
+    <img src="{{ url_for('static', filename='img/loading-search.gif') }}" class="loading-gif" id="loading-search"></img>
+    <div id="loading-lsi">
+        <img src="{{ url_for('static', filename='img/loading-search.gif') }}" class="loading-gif"></img>
+        <p>initiaizing LSI. this may take a while.</p>
+    </div>
+    </section>
+    
 {%  endblock %}

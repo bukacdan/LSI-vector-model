@@ -1,0 +1,28 @@
+#similar {
+  margin-left: 6%;
+}
+
+#similar .result-list {
+  list-style: none;
+  counter-reset: fancy-counter;
+}
+
+#similar .result-item {
+  counter-increment: fancy-counter;
+  display: flex;
+  align-items: center;
+  width: 99%;
+  padding: 1rem;
+  border-bottom: solid 1px black;
+}
+
+#similar .result-item:last-of-type {
+  border-bottom: none;
+}
+
+#similar .result-item::before {
+  content: counter(fancy-counter);
+  font-size: 3.2rem;
+  margin-right: 1.5rem;
+  font-family: 'Source Code Pro', monospace;
+}

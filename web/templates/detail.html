@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block head %}
+<link rel='stylesheet' href={{ url_for('static', filename='css/similar.css') }} />
+<link rel='stylesheet' href={{ url_for('static', filename='css/detail.css') }} />
+{% endblock %}
+
+{% block content %}
+  <section id="detail" class="page-content vertical-centered">
+    <h1 class="technical detail-headline">
+      Document {{ document["document_index"] }}
+    </h1>
+    <article class="detail-article">
+      {{ document["document"] }}
+    </article>
+  </section>
+  {% if similar_documents | length > 0 %}
+
+    <section class="page-content vertical-centered">
+      <hr class="detail-separator">
+    </section>
+
+    <section class="page-content vertical-centered">
+      <h1 class="technical detail-headline">Similar documents</h1>
+    </section>
+
+    <section id="similar">
+      <ol class="result-list">
+        {% for s in similar_documents %}
+          <li class="result-item">
+            <article class="result-article">
+              <header>
+                <p class="technical">
+                  Angle: {{ s["angle"] }} |
+                  Document index: {{ s["document_index"] }} |
+                  Document category: {{ s["document_category"] }}
+                </p>
+                <p class="text">{{ s["document"][:100] }}...</p>
+              </header>
+              <a href="{{ url_for('detail', idx_loop=loop.index, idx_document_url = s['document_index'], idx_document=s['document_index'], similar=True) }}"><button class="submit-btn">Go to detail &rarr;</button></a>
+            </article>
+          </li>
+        {% endfor %}
+      </ol>
+    </section>
+  {% endif %}
+{% endblock %}
