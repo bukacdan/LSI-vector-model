@@ -8,13 +8,13 @@
 {% block content %}
   <section id="detail" class="page-content vertical-centered">
     <h1 class="technical detail-headline">
-      Result n.{{ index }}
+      Document {{ document["document_index"] }}
     </h1>
     <article class="detail-article">
-      {{ text["document"] }}
+      {{ document["document"] }}
     </article>
   </section>
-  {% if similar | length > 0 %}
+  {% if similar_documents | length > 0 %}
 
     <section class="page-content vertical-centered">
       <hr class="detail-separator">
@@ -26,7 +26,7 @@
 
     <section id="similar">
       <ol class="result-list">
-        {% for s in similar %}
+        {% for s in similar_documents %}
           <li class="result-item">
             <article class="result-article">
               <header>
@@ -37,7 +37,7 @@
                 </p>
                 <p class="text">{{ s["document"][:100] }}...</p>
               </header>
-              <a href="{{ url_for('detail', idx=loop.index) }}"><button class="submit-btn">Go to detail &rarr;</button></a>
+              <a href="{{ url_for('detail', idx_loop=loop.index, idx_document_url = s['document_index'], idx_document=s['document_index'], similar=True) }}"><button class="submit-btn">Go to detail &rarr;</button></a>
             </article>
           </li>
         {% endfor %}

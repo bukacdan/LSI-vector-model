@@ -31,14 +31,15 @@ def results():
     return render_template("results.html", seq=sequential, res=lsi.last_query_results, time=lsi.last_query_execution_time)
 
 
-@app.route("/results/<idx>")
-def detail(idx = 0):
+@app.route("/results/<idx_document_url>")
+def detail(idx_document_url):
     global lsi
 
     if not lsi.prepared:
         return redirect(url_for("index"))
-    lsi.process_document(int(idx))
-    return render_template("detail.html", index=idx, text=lsi.last_query_results[max(0, int(idx) - 1)], similar=lsi.last_document_results)
+    document = lsi.last_document_results[max(0, int(request.args["idx_loop"]) - 1)] if request.args["similar"] == "True" else lsi.last_query_results[max(0, int(request.args["idx_loop"]) - 1)]
+    lsi.process_document(int(request.args["idx_document"]))
+    return render_template("detail.html", document=document, similar_documents=lsi.last_document_results)
 
 
 @app.route("/about")
