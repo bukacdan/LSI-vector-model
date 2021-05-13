@@ -41,10 +41,6 @@ Tuto matici dekomponujeme pomocí singular-value-decomposition (SVD) na matice:
 ### Hledání optimálního počtu konceptů
 Naším cílem bylo najití optimálního počtu k konceptů tak, aby k bylo co nejnižší (kvůli rychlosti vyhledávání) a zároveň výsledky co nejpřesnější.
 
-![optimální počet komponent](./optimal_components_search.png)
-
-*Na ose x je vynešen počet konceptů, na ose y hodnoty singular values tedy "důležitost" konceptů. Křivka se lomí v bodě x=15*
-
 ### Zobrazení dotazu do prostoru konceptů
 Dále je zapotřebí zobrazit lematizovaný dotaz uživatele do prostoru konceptů jako vektor, následně změřit kosinovou vzdálenost v tohoto vektoru od ostatních vektorů dokumentů.
 
@@ -95,10 +91,10 @@ Třídu je při prvním spuštění třeba inicializovat. Tato operace může tr
 Když uživatel potvrdí dotaz ve formuláři na hlavní stránce, je tento dotaz předán LSI třídě. Ta dotaz vyhodnotí a vrátí nazpět list výsledných dokumentů. Ty jsi zobrazeny v seznamu výsledků.
 
 ## Ukázka vstupu
-![vstup uživatele](./user_input.png)
+![vstup uživatele](./img/user_input.png)
 uživatel zadal vstup "washington" a nevybral možnost vyhledávat sekvenčně
 
-![výsledky vyhledávání](./search_results.png)
+![výsledky vyhledávání](./img/search_results.png)
 Aplikace vrátila 100 výsledků za 0.15s. 
 
 Každý výsledek má nad sebou popsaný:
@@ -108,7 +104,36 @@ Každý výsledek má nad sebou popsaný:
 * index dokumentu
 * kategorii dokumentu
 
-![detail výsledku](./results_detail.png)
+![detail výsledku](./img/results_detail.png)
 V horní části obrazovky je původní text (bez našich úprav) v plném rozsahu.
 
 Pod ním jsou vylistované jemu podobné dokumenty.
+
+## Experimentální sekce
+Nejprve bylo potřeba určit optimální počet K konceptů. Vyzkoušeli jsme pro K hodnoty z intrevalu <1, 200> a pozorovali hodnoty v matici S při singular value decomposition.
+
+![optimální počet komponent](./img/optimal_components_search.png)
+
+*Na ose x je vynešen počet konceptů, na ose y hodnoty singular values tedy "důležitost" konceptů. Křivka se lomí v bodě x=15*
+
+V dalším experimentu zkoušíme hodnoty pro K z intervalu <1, 50> a inkrementujeme o 2 (pro více hodnot trval výpočet příliš dlouho). Zároveň pro každou hodnotu K zkoušíme dotaz zpracovat s lemmatizací i bez. Výsledky zkoušíme na 4 různých dotazech.
+
+![výsledky hledání pro různé K](./img/experiment.png)
+
+V grafech je vidět, že pro nižší hodnoty K je kosinová vzdálenost menší, nicméně při prozkoumání výsledných dokumentů se ukázalo, že nejsou příliš relevantní pro dotaz.
+Rostoucí funkce průměrné kosinové vzdálenosti v závislosti na K se láme zhruba okolo bodu K=15, což odpovídá předchozímu experimentu.
+
+Zároveň se ukázalo, že lemmatizace dotazu nemá žádný vliv na výsledky (křivka průměrné vzdálenosti s lemmatizací kopíruje křivku bez lemmatizace).
+
+## Diskuze
+Největším problémem modelu je, že pokud je mu zadán dotaz, který se neobjevuje v žádném z dokumentů a ani v žádném z konceptů, tedy vektor tohoto dotazu je nulový, všechny dokumenty v kolekci jsou stejně dobré, tedy mají stejnou kosinovou vzdálenost. Model proto vrátí jako nejlepší výsledek první dokument v kolekci (shodou náhod o Pittsburg Penguins a Jaromíru Jágrovi).
+
+Dalším nedostatkem je řešení sekvenčního prohledávání. V ideálním případě by mělo být realizováno pomocí nastavení počtu konceptů K na maximální hodnotu (v našem případě počet dokumentů).
+Pro takto vysokou hodnotu (téměř 20000) nám však nestačila operační paměť a program zkolaboval.
+
+## Závěr
+Podařilo se nám implementovat LSI vektorový model k information retrieval. Při zadání dotazu, který je možné v dokumentech najít, model vrací relevantní výsledky.
+
+Při řešení jsme se potýkali s menšími problémy, nejzávažnější pro logiku modelu bylo správné zobrazování dottazu do prostoru konceptu. Samozřejmě nemohly chybět ani zádrhely s webovým GUI.
+
+Projekt hodnotíme jako zajímavý a přínosný.
