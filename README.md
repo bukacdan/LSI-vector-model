@@ -3,6 +3,8 @@
 Semestral project for the BI-VWM (Searching the web and multimedial databases) subject, summer semester 2020/2021 by
 Daniel Bukač ([bukacdan@fit.cvut.cz](mailto:bukacdan@fit.cvut.cz)) and Matěj Latka ([latkamat@fit.cvut.cz](mailto:latkamat@fit.cvut.cz)).
 
+[project documentation and results](./docs/docs.md)
+
 # Installation
 1. [Install Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/)
 2. Clone the repository with SSH
