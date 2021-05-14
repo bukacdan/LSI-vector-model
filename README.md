@@ -7,7 +7,7 @@ Daniel Bukač ([bukacdan@fit.cvut.cz](mailto:bukacdan@fit.cvut.cz)) and Matěj L
 The project is hosted at [https://lsi-vector.krupizde.eu](https://lsi-vector.krupizde.eu).
 
 # Documentation
-Documentation and results are provided in [docs.md](https://gitlab.fit.cvut.cz/latkamat/lsi-vector-model/blob/master/docs/docs.md) or at [https://lsi-vector.krupizde.eu/about](https://lsi-vector.krupizde.eu)
+Documentation and results are provided in [./docs/docs.md](https://gitlab.fit.cvut.cz/latkamat/lsi-vector-model/blob/master/docs/docs.md) or at [https://lsi-vector.krupizde.eu/about](https://lsi-vector.krupizde.eu)
 
 # Installation
 If you want to install the project locally, please follow these steps:
