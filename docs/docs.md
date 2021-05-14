@@ -55,7 +55,7 @@ Celá aplikace je kontejnerizovaná v [Dockeru](https://www.docker.com/) a spou�
 * [Kneed](https://kneed.readthedocs.io/en/stable/) k hledání zlomu v křivce počtu konceptů
 
 ### Stavba aplikace
-Veškerá logika aplikace se nachází v modulu [lsiModel](../web/lsiModel.py) ve třídě LSI. 
+Veškerá logika aplikace se nachází v modulu [lsiModel](https://gitlab.fit.cvut.cz/latkamat/lsi-vector-model/blob/master/web/lsiModel.py) ve třídě LSI. 
 
 Důležité třídní metody:
 * `prepare`
