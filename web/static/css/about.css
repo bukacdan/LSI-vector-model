@@ -1,0 +1,37 @@
+.about-content {
+  width: 80vw;
+  margin-left: 10vw;
+  margin-right: 10vw;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-family: 'Source Code Pro', monospace;
+}
+
+.about-content h1, h2, h3 {
+  font-family: 'Inter';
+}
+
+.about-content a {
+  text-decoration: none;
+  color: #BFAA03 !important;
+  transition: all .6s ease-out !important;
+}
+
+.about-content a:hover {
+  text-decoration: underline !important;
+  transition: all .6s ease-out !important;
+}
+.about-content ol li::marker { 
+  color: #BFAA03;
+}
+
+.about-content ul li::marker { 
+  content: "\2022 \0020";
+  color: #BFAA03;
+}
+
+.about-content img {
+  max-width: 100%;
+  margin-top: .5rem;
+  margib-bottom: .25rem;
+}

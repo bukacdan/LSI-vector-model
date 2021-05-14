@@ -1,0 +1,76 @@
+<h1 id="lsi-vektorový-model">LSI Vektorový model</h1>
+<h2 id="popis-projektu">Popis projektu</h2>
+<p>Cílem projektu bylo vytvořit webovou aplikaci implementující LSI vektorový model k vyhledávání nad kolekcí textových dokumentů.</p>
+<p>Vstupem do vyhledávacího formuláře je textový dotaz uživatele, podobně jako u klasických webových vyhledávačů, a hodnota přepínače, která určuje, zda bude vyhledáváno v kolekci sekvenčně, nebo optimalizovaně pomocí LSI vektorového modelu.</p>
+<p>Výstupem aplikace je seřazený seznam náhledů dokumentů z kolekce, které nejpřesněji odpovídají zadanému dotazu. Daný náhled je možno rozkliknout a přečíst v plném rozsahu.</p>
+<h2 id="způsob-řešení">Způsob řešení</h2>
+<h3 id="data">Data</h3>
+<p>Za zdroj textových dat byl vybrán dataset <a href="http://qwone.com/~jason/20Newsgroups/">20 newsgroups</a> obsahující přibližně 20 tisíc textových dokumentů rozdělených téměř rovnoměrně do 20 kategorií. Tento dataset je stahován přímo pomocí <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.fetch_20newsgroups.html">knihovní funkce</a> v scikit-learn.</p>
+<h3 id="čištění-dat">Čištění dat</h3>
+<p>Textová data mohou obsahovat nežádoucí šum, proto bylo potřeba je pročistit. S dokumenty byly postupně prováděny tyto úpravy: 1. převod na malá písmena 2. odstranění e-mailových adres 3. odstranění non-alfabetických znaků 4. lemmatizace 5. odstranění krátkých slov</p>
+<h3 id="tvorba-vyhledávacího-modelu">Tvorba vyhledávacího modelu</h3>
+<p>Nejprve je vytvořena term-by-document matici o rozměrech (<počet dokumentů>, <počet termů>). Hodnoty v ní jsou převáženy pomocí tf-idf schématu. Tato matice je dále dekomponována pomocí singular-value-decomposition (SVD) na matice: * <strong>u</strong> * rozměry: (<počet dokumentů>, &lt;k = počet konceptů&gt;) * concept-by-document matice * <strong>s</strong> * rozměry: (&lt;n = počet konceptů&gt;, ) * vektor konceptů * <strong>vt</strong> * rozměry: (&lt;k = počet konceptů&gt;, <počet termů>) * concept-by-term matice</p>
+<h3 id="hledání-optimálního-počtu-konceptů">Hledání optimálního počtu konceptů</h3>
+<p>Cílem bylo nalézt optimální počet <span class="math inline">\(k\)</span> konceptů tak, aby <span class="math inline">\(k\)</span> bylo co nejnižší (kvůli rychlosti vyhledávání) a výsledky zároveň co nejpřesnější.</p>
+<h3 id="zobrazení-dotazu-do-prostoru-konceptů">Zobrazení dotazu do prostoru konceptů</h3>
+<p>Dále je zapotřebí zobrazit lematizovaný dotaz uživatele jako vektor do prostoru konceptů, následně změřit kosinovou vzdálenost <span class="math inline">\(v\)</span> tohoto vektoru od vektorů ostatních dokuemntů.</p>
+<h2 id="implementace">Implementace</h2>
+<h3 id="programovací-jazyk-a-technologie">Programovací jazyk a technologie</h3>
+<p>K vývoji byl použit programovací jazyk <a href="https://www.python.org/">Python</a> a mikro webový framework <a href="https://flask.palletsprojects.com/en/1.1.x/">Flask</a>.</p>
+<p>Při testování dílčích částí algoritmu byl využit <a href="../logic/logic.ipynb">Jupyter notebook</a>.</p>
+<p>Celá aplikace je kontejnerizovaná v <a href="https://www.docker.com/">Dockeru</a> a spouštěná pomocí <a href="https://docs.docker.com/compose/">Docker Compose</a>.</p>
+<h3 id="knihovny">Knihovny</h3>
+<ul>
+<li><a href="https://pandas.pydata.org/">Pandas</a> k analýze a provádění souhrnných transformací nad daty</li>
+<li><a href="https://numpy.org/">Numpy</a> a <a href="https://www.scipy.org/">Scipy</a> k práci s maticemi</li>
+<li><a href="https://www.nltk.org/">NLTK</a> k analýze přirozeného jazyka</li>
+<li><a href="https://scikit-learn.org/stable/">scikit-learn</a> k tvorbě LSI modelu</li>
+<li><a href="https://kneed.readthedocs.io/en/stable/">Kneed</a> k hledání zlomu v křivce počtu konceptů</li>
+</ul>
+<h3 id="stavba-aplikace">Stavba aplikace</h3>
+<p>Veškerá logika aplikace se nachází v modulu <a href="../web/lsiModel.py">lsiModel</a> ve třídě LSI.</p>
+<p>Důležité třídní metody: * <code>prepare</code> * pokud není lokálně stažen dataset s dokumenty, stáhne je * pročistí dokumenty * vytvoří model pro vyhledávání (ten se vytvoří pouze jednou při inicializaci, poté už zůstává uvnitř třídy)</p>
+<ul>
+<li><code>svd_optimal_k</code>
+<ul>
+<li>nalezne optimální počet konceptů</li>
+</ul></li>
+<li><code>process_query</code>
+<ul>
+<li>zpracuje dotaz uživatele na slova a promítne jej do prostoru konceptů</li>
+<li>změří kosinovou podobnost mezi dotazem a dokumenty</li>
+<li>lematizuje dotaz</li>
+<li>vrátí seznam dokumentů odpovídajících dotazu</li>
+</ul></li>
+<li><code>process_query_seq</code>
+<ul>
+<li>rozdělí dotaz uživatele na slova</li>
+<li>pro každé slovo sekvenčně prochází term-by-document matici a vrací dokumenty, ve kterých se slovo nachází</li>
+</ul></li>
+</ul>
+<p>Třídu je při prvním spuštění třeba inicializovat. Tato operace může trvat 1-2 minuty. Aplikace do konzole vypisuje, která fáze inicializace právě probíhá, we webovém prostředí běží waiting gif.</p>
+<p>Když uživatel potvrdí dotaz ve formuláři na hlavní stránce, je tento dotaz předán LSI třídě. Ta dotaz vyhodnotí a vrátí seznam výsledných dokumentů. Ty jsou zobrazeny v seznamu výsledků.</p>
+<h2 id="ukázka-vstupu">Ukázka vstupu</h2>
+<p><img src="./img/user_input.png" alt="vstup uživatele" /> uživatel zadal vstup “washington” a nevybral možnost vyhledávat sekvenčně</p>
+<p><img src="./img/search_results.png" alt="výsledky vyhledávání" /> Aplikace vrátila výsledky za 0.15s, bylo zobrazeno prvních 100 výsledků.</p>
+<p>Ke každému dotazu jsou uvedena následující data: * původní dotaz * lematizovaný dotaz * úhlová vzdálenost výsledku * index dokumentu * kategorie dokumentu</p>
+<p><img src="./img/results_detail.png" alt="detail výsledku" /> V horní části obrazovky je původní text (před čištěním) v plném rozsahu Pod ním jsou uvedeny podobné dokumenty.</p>
+<h2 id="experimentální-sekce">Experimentální sekce</h2>
+<p>Nejprve bylo potřeba určit optimální počet <span class="math inline">\(k\)</span> konceptů. Byly testovány hodnoty <span class="math inline">\(k\)</span> z intervalu <span class="math inline">\(\langle 1, 200 \rangle\)</span> a pozorovány hodnoty v matici <span class="math inline">\(S\)</span> při singular value decomposition.</p>
+<figure>
+<img src="./img/optimal_components_search.png" alt="optimální počet komponent" /><figcaption>optimální počet komponent</figcaption>
+</figure>
+<p>Na ose x je zobrazen počet konceptů, na ose y hodnoty singular values tedy “důležitost” konceptů. Křivka se lomí v bodě x=15.</p>
+<p>V dalším experimentu byly zkoušeny hodnoty pro <span class="math inline">\(k\)</span> z intervalu <span class="math inline">\(\langle 1, 50\rangle\)</span> inkrementované vždy po dvou (pro více hodnot trval výpočet příliš dlouho). Zároveň bylo pro každou hodnotu <span class="math inline">\(k\)</span> zkoušeno zpracování dotazu s lemmatizací i bez. Výsledky byly zkoušeny na čtyřech různých dotazech.</p>
+<figure>
+<img src="./img/experiment.png" alt="výsledky hledání pro různé K" /><figcaption>výsledky hledání pro různé K</figcaption>
+</figure>
+<p>V grafech je vidět, že pro nižší hodnoty <span class="math inline">\(k\)</span> je kosinová vzdálenost menší, nicméně při prozkoumání výsledných dokumentů se ukázalo, že obsahově nejsou příliš relevantní vzhledem k dotazu. Růst funkce průměrné kosinové vzdálenosti v závislosti na <span class="math inline">\(k\)</span> se definitivně zpomaluje okolo bodu <span class="math inline">\(k=15\)</span>, což odpovídá nalezenému optimálnímu počtu konceptů v předchozím experimentu.</p>
+<p>Zároveň se ukázalo, že lemmatizace dotazu nemá žádný vliv na výsledky (křivka průměrné vzdálenosti s lemmatizací překrývá křivku bez lemmatizace).</p>
+<h2 id="diskuze">Diskuze</h2>
+<p>Největším problémem modelu je, že pokud je mu zadán dotaz, ze kterého není možné extrahovat žádný term získaný z datasetu, tedy vektor tohoto dotazu je nulový, všechny dokumenty v kolekci jsou stejně dobré, tedy mají stejnou kosinovou vzdálenost. Model proto vrátí jako nejlepší výsledek první dokument v kolekci (shodou náhod o Pittsburg Penguins a Jaromíru Jágrovi).</p>
+<p>Dalším nedostatkem je řešení sekvenčního prohledávání. V ideálním případě by mělo být realizováno pomocí nastavení počtu konceptů <span class="math inline">\(K\)</span> na maximální hodnotu (v tomto případě počet dokumentů). Pro takto vysokou hodnotu (téměř 20000) však nestačila operační paměť a program zkolaboval.</p>
+<h2 id="závěr">Závěr</h2>
+<p>Podařilo se implementovat LSI vektorový model k information retrieval. Při zadání dotazu, který odpovídá alespoň jednomu termu získanému z množiny dokumentů, model vrací relevantní výsledky, zároveň je možné pro každý dokument z množiny výsledků najít a zobrazit podobné dokumenty.</p>
+<p>Při řešení jsme se potýkali s menšími problémy, zvlášť bylo nutné vyladit správné promítání dotazu do prostoru konceptů. Drobné zádrhely nastaly i při práci s webovým GUI.</p>
+<p>Projekt hodnotíme jako zajímavý a přínosný.</p>

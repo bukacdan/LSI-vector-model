@@ -30,12 +30,21 @@ class LSI:
 
 
     def fetch_dataset(self, data_dir: str = "sklearn-data", remove: tuple = ("headers", "footers", "quotes")):
+        """
+        if neccessary download the dataset
+
+        fetche 20 newsgroups dataset
+        create pandas data frame and store it as class member
+        """
         logging.info("LSI: Fetching dataset.")
         self.dataset = fetch_20newsgroups(subset="all", data_home=os.path.join(".", data_dir), remove=remove)
         self.df = pd.DataFrame({"documents": self.dataset.data})
 
 
     def clean_documents(self, min_word_length: int = 1):
+        """
+        cleane the dataset articles
+        """
         logging.info("LSI: Cleaning documents.")
         self.df['documents_cleaned'] = pd.Series(self.df["documents"])
         self.df['documents_cleaned'] = (
@@ -49,6 +58,9 @@ class LSI:
 
 
     def create_tdm(self):
+        """
+        create term-document matrix
+        """
         logging.info("LSI: Creating term-by-document matrix from the dataset.")
         self.tfidf = TfidfVectorizer(stop_words="english")
 
@@ -57,6 +69,9 @@ class LSI:
 
 
     def svd_optimal_k(self):
+        """
+        find optimal number of concepts
+        """
         logging.info("LSI: Searching for optimal number of concepts.")
         _, s, _ = svds(self.tdm, self.k)
         
@@ -67,6 +82,9 @@ class LSI:
 
 
     def svd_dataset(self):
+        """
+        singular value decomponsition for term-document-matrix
+        """
         self.svd_optimal_k()
 
         logging.info("LSI: Applying SVD to the dataset.")
@@ -79,6 +97,9 @@ class LSI:
 
     
     def prepare(self):
+        """
+        initialize internal class structures
+        """
         self.fetch_dataset()
         self.clean_documents(min_word_length=1)
         self.create_tdm()
@@ -88,6 +109,13 @@ class LSI:
 
 
     def process_query(self, query: str, limit: int = 100) -> None:
+        """
+        process user input
+
+        lemmatize the query
+        project into space of concepts
+        find relevant documents
+        """
         start = time.time()
         logging.info(f"LSI: Processing query \"{query}\".")
         query = query.split()
@@ -118,7 +146,12 @@ class LSI:
         self.last_query_execution_time = end - start
 
 
-    def process_query_seq(self, query, limit=-1) -> None:
+    def process_query_seq(self, query:str, limit:int = -1) -> None:
+        """
+        process user input without optimization
+
+        go through term-document matrix and search for words matching the ones in the query
+        """
         start = time.time()
         self.terms = self.tfidf.get_feature_names()
         logging.info(f'LSI: Processing query \"{query}\".')
