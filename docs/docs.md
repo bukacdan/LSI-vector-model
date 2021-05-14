@@ -106,20 +106,20 @@ Na ose x je zobrazen počet konceptů, na ose y hodnoty singular values tedy "d�
 
 V dalším experimentu byly zkoušeny hodnoty pro $k$ z intervalu $\langle 1, 50\rangle$ inkrementované vždy po dvou (pro více hodnot trval výpočet příliš dlouho). Zároveň bylo pro každou hodnotu $k$ zkoušeno zpracování dotazu s lemmatizací i bez. Výsledky byly zkoušeny na čtyřech různých dotazech.
 
-![výsledky hledání pro různé K](./img/experiment.png)
+![výsledky hledání pro různé k](./img/experiment.png)
 
 V grafech je vidět, že pro nižší hodnoty $k$ je kosinová vzdálenost menší, nicméně při prozkoumání výsledných dokumentů se ukázalo, že obsahově nejsou příliš relevantní vzhledem k dotazu.
 Růst funkce průměrné kosinové vzdálenosti v závislosti na $k$ se definitivně zpomaluje okolo bodu $k=15$, což odpovídá nalezenému optimálnímu počtu konceptů v předchozím experimentu.
 
-Zároveň se ukázalo, že lemmatizace dotazu nemá žádný vliv na výsledky (křivka průměrné vzdálenosti s lemmatizací překrývá křivku bez lemmatizace).
+Zároveň se ukázalo, že lemmatizace dotazu nemá žádný vliv na výsledky (křivka průměrné vzdálenosti s lemmatizací překrývá křivku průměrné vzdálenosti bez lemmatizace).
 
 ## Diskuze
 Největším problémem modelu je, že pokud je mu zadán dotaz, ze kterého není možné extrahovat žádný term získaný z datasetu, tedy vektor tohoto dotazu je nulový, všechny dokumenty v kolekci jsou stejně dobré, tedy mají stejnou kosinovou vzdálenost. Model proto vrátí jako nejlepší výsledek první dokument v kolekci (shodou náhod o Pittsburg Penguins a Jaromíru Jágrovi).
 
-Dalším nedostatkem je řešení sekvenčního prohledávání. V ideálním případě by mělo být realizováno pomocí nastavení počtu konceptů $K$ na maximální hodnotu (v tomto případě počet dokumentů). Pro takto vysokou hodnotu (téměř 20000) však nestačila operační paměť a program zkolaboval.
+Dalším nedostatkem je řešení sekvenčního prohledávání. V ideálním případě by mělo být realizováno pomocí nastavení počtu konceptů $k$ na maximální hodnotu (v tomto případě počet dokumentů). Pro takto vysokou hodnotu (téměř 20000) však nestačila operační paměť a program zkolaboval.
 
 ## Závěr
-Podařilo se implementovat LSI vektorový model k information retrieval. Při zadání dotazu, který odpovídá alespoň jednomu termu získanému z množiny dokumentů, model vrací relevantní výsledky, zároveň je možné pro každý dokument z množiny výsledků najít a zobrazit podobné dokumenty.
+Podařilo se implementovat LSI vektorový model k information retrieval. Při zadání dotazu, z něhož lze extrahovat alespoň 1 term získaný z datasetu, model vrací relevantní výsledky, zároveň je možné pro každý dokument z množiny výsledků najít a zobrazit podobné dokumenty.
 
 Při řešení jsme se potýkali s menšími problémy, zvlášť bylo nutné vyladit správné promítání dotazu do prostoru konceptů. Drobné zádrhely nastaly i při práci s webovým GUI.
 

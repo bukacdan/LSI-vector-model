@@ -94,32 +94,55 @@
 <p>Když uživatel potvrdí dotaz ve formuláři na hlavní stránce, je tento dotaz předán LSI třídě. Ta dotaz vyhodnotí a vrátí seznam výsledných dokumentů. Ty jsou zobrazeny v seznamu výsledků.</p>
 <h2 >Ukázka vstupu</h2>
 <p>
+<center>
     <img src="{{ url_for('static', filename='img/user_input.png') }}" alt="vstup uživatele"/>
     <center>uživatel zadal vstup “washington” a nevybral možnost vyhledávat sekvenčně</center>
+</center>
 </p>
 <p>
+<center>
     <img src="{{ url_for('static', filename='img/search_results.png') }}" alt="výsledky vyhledávání" />
     <center>Aplikace vrátila výsledky za 0,15 s, bylo zobrazeno prvních 100 výsledků.</center>
+</center>
 </p>
-<p>Ke každému dotazu jsou uvedena následující data: * původní dotaz * lematizovaný dotaz * úhlová vzdálenost výsledku * index dokumentu * kategorie dokumentu</p>
-<p><img src="./img/results_detail.png" alt="detail výsledku" /> V horní části obrazovky je původní text (před čištěním) v plném rozsahu Pod ním jsou uvedeny podobné dokumenty.</p>
-<h2 id="experimentální-sekce">Experimentální sekce</h2>
-<p>Nejprve bylo potřeba určit optimální počet <span class="math inline">\(k\)</span> konceptů. Byly testovány hodnoty <span class="math inline">\(k\)</span> z intervalu <span class="math inline">\(\langle 1, 200 \rangle\)</span> a pozorovány hodnoty v matici <span class="math inline">\(S\)</span> při singular value decomposition.</p>
-<figure>
-<img src="./img/optimal_components_search.png" alt="optimální počet komponent" /><figcaption>optimální počet komponent</figcaption>
-</figure>
-<p>Na ose x je zobrazen počet konceptů, na ose y hodnoty singular values tedy “důležitost” konceptů. Křivka se lomí v bodě x=15.</p>
-<p>V dalším experimentu byly zkoušeny hodnoty pro <span class="math inline">\(k\)</span> z intervalu <span class="math inline">\(\langle 1, 50\rangle\)</span> inkrementované vždy po dvou (pro více hodnot trval výpočet příliš dlouho). Zároveň bylo pro každou hodnotu <span class="math inline">\(k\)</span> zkoušeno zpracování dotazu s lemmatizací i bez. Výsledky byly zkoušeny na čtyřech různých dotazech.</p>
-<figure>
-<img src="./img/experiment.png" alt="výsledky hledání pro různé K" /><figcaption>výsledky hledání pro různé K</figcaption>
-</figure>
-<p>V grafech je vidět, že pro nižší hodnoty <span class="math inline">\(k\)</span> je kosinová vzdálenost menší, nicméně při prozkoumání výsledných dokumentů se ukázalo, že obsahově nejsou příliš relevantní vzhledem k dotazu. Růst funkce průměrné kosinové vzdálenosti v závislosti na <span class="math inline">\(k\)</span> se definitivně zpomaluje okolo bodu <span class="math inline">\(k=15\)</span>, což odpovídá nalezenému optimálnímu počtu konceptů v předchozím experimentu.</p>
-<p>Zároveň se ukázalo, že lemmatizace dotazu nemá žádný vliv na výsledky (křivka průměrné vzdálenosti s lemmatizací překrývá křivku bez lemmatizace).</p>
-<h2 id="diskuze">Diskuze</h2>
+<p>Ke každému dotazu jsou uvedena následující data:
+    <ul>
+        <li>původní dotaz</li>
+        <li>lematizovaný dotaz</li>
+        <li>úhlová vzdálenost výsledku</li>
+        <li>index dokumentu</li>
+        <li>kategorie dokumentu</li>
+    </ul>
+</p>
+<p>
+<center>
+    <img src="{{ url_for('static', filename='img/results_detail.png') }}" alt="detail výsledku" />
+    <center>V horní části obrazovky je původní text (před čištěním) v plném rozsahu. Pod ním jsou uvedeny podobné dokumenty.</center>
+</center>
+</p>
+<h2>Experimentální sekce</h2>
+<p>Nejprve bylo potřeba určit optimální počet \(k\) konceptů. Byly testovány hodnoty \(k\) z intervalu \(\langle 1, 200 \rangle\) a pozorovány hodnoty v matici \(S\) při singular value decomposition.</p>
+<p>
+<center>
+    <img src="{{ url_for('static', filename='img/optimal_components_search.png') }}" alt="optimální počet komponent" />
+    <center>optimální počet komponent</center>
+</center>
+</p>
+<p>Na ose \(\texttt{x}\) je zobrazen počet konceptů, na ose \(\texttt{y}\) hodnoty singular values tedy “důležitost” konceptů. Křivka se lomí v bodě \(\texttt{x}\)=15.</p>
+<p>V dalším experimentu byly zkoušeny hodnoty pro \(k\) z intervalu \(\langle 1, 50\rangle\) inkrementované vždy po dvou (pro více hodnot trval výpočet příliš dlouho). Zároveň bylo pro každou hodnotu \(k\) zkoušeno zpracování dotazu s lemmatizací i bez. Výsledky byly zkoušeny na čtyřech různých dotazech.</p>
+<p>
+<center>
+    <img src="{{ url_for('static', filename='img/experiment.png') }}" alt="výsledky hledání pro různé K" />
+    <center>výsledky hledání pro různé \(k\)</center>
+</center>
+</p>
+<p>V grafech je vidět, že pro nižší hodnoty \(k\) je kosinová vzdálenost menší, nicméně při prozkoumání výsledných dokumentů se ukázalo, že obsahově nejsou příliš relevantní vzhledem k dotazu. Růst funkce průměrné kosinové vzdálenosti v závislosti na \(k\) se definitivně zpomaluje okolo bodu \(k=\)15, což odpovídá nalezenému optimálnímu počtu konceptů v předchozím experimentu.</p>
+<p>Zároveň se ukázalo, že lemmatizace dotazu nemá žádný vliv na výsledky (křivka průměrné vzdálenosti s lemmatizací překrývá křivku průměrné vzdálenosti bez lemmatizace).</p>
+<h2>Diskuze</h2>
 <p>Největším problémem modelu je, že pokud je mu zadán dotaz, ze kterého není možné extrahovat žádný term získaný z datasetu, tedy vektor tohoto dotazu je nulový, všechny dokumenty v kolekci jsou stejně dobré, tedy mají stejnou kosinovou vzdálenost. Model proto vrátí jako nejlepší výsledek první dokument v kolekci (shodou náhod o Pittsburg Penguins a Jaromíru Jágrovi).</p>
-<p>Dalším nedostatkem je řešení sekvenčního prohledávání. V ideálním případě by mělo být realizováno pomocí nastavení počtu konceptů <span class="math inline">\(K\)</span> na maximální hodnotu (v tomto případě počet dokumentů). Pro takto vysokou hodnotu (téměř 20000) však nestačila operační paměť a program zkolaboval.</p>
-<h2 id="závěr">Závěr</h2>
-<p>Podařilo se implementovat LSI vektorový model k information retrieval. Při zadání dotazu, který odpovídá alespoň jednomu termu získanému z množiny dokumentů, model vrací relevantní výsledky, zároveň je možné pro každý dokument z množiny výsledků najít a zobrazit podobné dokumenty.</p>
+<p>Dalším nedostatkem je řešení sekvenčního prohledávání. V ideálním případě by mělo být realizováno pomocí nastavení počtu konceptů \(k\) na maximální hodnotu (v tomto případě počet dokumentů). Pro takto vysokou hodnotu (téměř 20000) však nestačila operační paměť a program zkolaboval.</p>
+<h2>Závěr</h2>
+<p>Podařilo se implementovat LSI vektorový model k information retrieval. Při zadání dotazu, z něhož lze extrahovat alespoň 1 term získaný z datasetu, model vrací relevantní výsledky, zároveň je možné pro každý dokument z množiny výsledků najít a zobrazit podobné dokumenty.</p>
 <p>Při řešení jsme se potýkali s menšími problémy, zvlášť bylo nutné vyladit správné promítání dotazu do prostoru konceptů. Drobné zádrhely nastaly i při práci s webovým GUI.</p>
 <p>Projekt hodnotíme jako zajímavý a přínosný.</p>
 </section>
